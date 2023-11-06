@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  ngnix:
+    container_name: ngnix
+    build:
+      context: ./requeriments/nginx
+    ports:
+      - 443:443
+    volumes:
+      - wordpress_volume:/var/www/html/wordpress
+    networks:
+      - inception-network
+
+  worldpress:
+    container_name: wordpress
+    build:
+      context: ./requeriments/wordpress
+    image: wordpress
+    volumes:
+      - wordpress_volume:/var/www/html/wordpress
+    networks:
+      - inception-network
+
+  mariadb:
+    container_name: mariadb
+    build:
+      context: ./requeriments/mariadb
+    networks:
+       - inception-network
+
+volumes:
+  wordpress_volume:
+    external: true
+
+networks:
+  inception-network:
+    driver: bridge
