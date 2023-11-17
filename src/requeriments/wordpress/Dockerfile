@@ -1,14 +1,38 @@
-FROM debian:oldstable
+FROM debian:bullseye
+
+ARG WORDPRESS_DB_HOST
+ARG WORDPRESS_DB_NAME
+ARG WORDPRESS_URL
+ARG WORDPRESS_GUEST_USER
+ARG WORDPRESS_GUEST_PASSWORD
+ARG WORDPRESS_GUEST_EMAIL
+ARG WORDPRESS_DB_USER
+ARG WORDPRESS_DB_PASSWORD
+ARG WORDPRESS_ADMIN_USER
+ARG WORDPRESS_ADMIN_PASSWORD
+ARG WORDPRESS_ADMIN_EMAIL
+
+RUN apt update
+RUN apt install -y apt-utils php7.4 \
+    php7.4-mysql \
+    php7.4-fpm \
+    mariadb-client \
+    vim \
+    wget \
+    sudo && mkdir /run/php
+
+COPY www.conf /etc/php/7.4/fpm/pool.d/www.conf
+
+RUN	wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar  \
+	&& chmod +x wp-cli.phar \
+	&& mv wp-cli.phar /usr/bin/wp
 
 
-RUN apt update -y
-RUN apt install php-fpm -y
-RUN sed -i.default "/^listen\s=.*/c\listen = 0.0.0.0:9000" \
-	/etc/php/[0-9]*.[0-9]*/fpm/pool.d/www.conf
 WORKDIR	/var/www/html/wordpress
-RUN echo "<?php phpinfo(); ?>" >> /var/www/html/wordpress/info.php
-RUN /etc/init.d/php7.4-fpm start
+
+COPY    setup.sh .
+RUN     chmod 777 setup.sh
 
 EXPOSE		9000
 
-ENTRYPOINT [ "php-fpm7.4", "--nodaemonize" ] 
+ENTRYPOINT [ "sh", "setup.sh" ] 

@@ -1,22 +1,42 @@
 version: "3"
 
 services:
-  ngnix:
-    container_name: ngnix
+  nginx:
+    container_name: nginx
     build:
       context: ./requeriments/nginx
+    depends_on:
+      - wordpress
     ports:
       - 443:443
     volumes:
       - wordpress_volume:/var/www/html/wordpress
+    restart: always
     networks:
       - inception-network
 
-  worldpress:
+  wordpress:
     container_name: wordpress
+    image: wordpress
+    restart: always
     build:
       context: ./requeriments/wordpress
-    image: wordpress
+      args:
+        - WORDPRESS_DB_HOST
+        - WORDPRESS_DB_NAME
+        - WORDPRESS_URL
+        - WORDPRESS_GUEST_USER
+        - WORDPRESS_GUEST_PASSWORD
+        - WORDPRESS_GUEST_EMAIL
+        - WORDPRESS_DB_USER
+        - WORDPRESS_DB_PASSWORD
+        - WORDPRESS_ADMIN_USER
+        - WORDPRESS_ADMIN_PASSWORD
+        - WORDPRESS_ADMIN_EMAIL
+    depends_on:
+      - mariadb
+    env_file:
+      - .env
     volumes:
       - wordpress_volume:/var/www/html/wordpress
     networks:
@@ -24,12 +44,26 @@ services:
 
   mariadb:
     container_name: mariadb
+    image: mariadb
+    restart: always
     build:
       context: ./requeriments/mariadb
+      args:
+        - MYSQL_DATABASE
+        - MYSQL_ROOT
+        - MYSQL_ROOT_PASS
+        - MYSQL_USER
+        - MYSQL_PASS
+    env_file:
+      - .env
+    volumes:
+      - mariadb_volume:/var/lib/mysql/
     networks:
        - inception-network
 
 volumes:
+  mariadb_volume:
+    external: true
   wordpress_volume:
     external: true
 
