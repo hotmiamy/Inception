@@ -1,4 +1,4 @@
-LOGIN			= llopesn
+LOGIN			= llopes-n
 COMPOSE 		= src/Docker-compose.yml
 VOLUMES_PATH	= /home/$(LOGIN)/data
 DOMAIN			= 127.0.0.1       $(LOGIN).42.fr
