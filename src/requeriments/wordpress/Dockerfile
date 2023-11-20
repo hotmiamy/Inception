@@ -13,11 +13,10 @@ ARG WORDPRESS_ADMIN_PASSWORD
 ARG WORDPRESS_ADMIN_EMAIL
 
 RUN apt update
-RUN apt install -y apt-utils php7.4 \
+RUN apt install -y php7.4 \
     php7.4-mysql \
     php7.4-fpm \
     mariadb-client \
-    vim \
     wget \
     sudo && mkdir /run/php
 
@@ -35,4 +34,4 @@ RUN     chmod 777 setup.sh
 
 EXPOSE		9000
 
-ENTRYPOINT [ "sh", "setup.sh" ] 
+CMD [ "sh", "setup.sh" ] 

@@ -26,4 +26,4 @@ RUN /tmp/setup.sh
 
 EXPOSE 3306
 
-ENTRYPOINT [ "mysqld_safe" ]
+CMD [ "mysqld_safe" ]
