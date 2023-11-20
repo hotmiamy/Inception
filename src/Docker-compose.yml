@@ -5,8 +5,14 @@ services:
     container_name: nginx
     build:
       context: ./requeriments/nginx
+      args:
+      - DOMAIN_NAME
+      - CERTS_CRT
+      - CERTS_KEY
     depends_on:
       - wordpress
+    env_file:
+      - .env
     ports:
       - 443:443
     volumes:

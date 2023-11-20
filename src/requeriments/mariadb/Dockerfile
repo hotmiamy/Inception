@@ -7,7 +7,7 @@ ARG MYSQL_USER
 ARG MYSQL_PASS
 
 RUN apt update
-RUN apt install mariadb-server mariadb-client procps -y
+RUN apt install mariadb-server -y
 
 RUN	mkdir -p /var/lib/mysql /var/run/mysqld && \
 	chown -R mysql:mysql /var/lib/mysql /var/run/mysqld && \
